@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- res/layout/activity_goal_monthly.xml -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <!-- 상단 레이아웃 (제목 및 아이콘) -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#32009688"
+        android:orientation="horizontal"
+        android:padding="16dp"
+        android:layout_gravity="top">
+
+        <ImageButton
+            android:id="@+id/backButton"
+            android:layout_width="52dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_back" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="목표 달성률"
+            android:layout_gravity="center"
+            android:layout_marginStart="10dp"
+            android:textSize="20sp"
+            android:textStyle="bold"/>
+    </LinearLayout>
+
+    <!-- 중간 컨텐츠 레이아웃 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_gravity="center"
+        android:padding="16dp">
+    <!-- 월간 목표 달성 요약 텍스트 -->
+        <TextView
+            android:id="@+id/tvMonthlySummary"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Monthly Goal Summary"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="16dp" />
+
+        <!-- 달성 통계를 시각화할 차트 뷰 (예: BarChart) -->
+        <com.github.mikephil.charting.charts.BarChart
+            android:id="@+id/barChartGoals"
+            android:layout_width="match_parent"
+            android:layout_height="300dp" />
+
+        <!-- 추가적인 통계 요약 텍스트 -->
+        <TextView
+            android:id="@+id/tvGoalCompletionRate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Completion Rate: 0%"
+            android:textSize="16sp"
+            android:layout_marginTop="16dp" />
+    </LinearLayout>
+</LinearLayout>

@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">AchievementTracker</string>
+    <!-- 카테고리 목록 -->
+    <string-array name="goal_categories">
+        <item>Health</item>
+        <item>Learning</item>
+        <item>Personal</item>
+        <item>Work</item>
+    </string-array>
+
+</resources>
