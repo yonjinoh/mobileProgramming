@@ -4,7 +4,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.CalendarView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -45,6 +47,16 @@ public class MainActivity extends MenuActivity {
         // 목표 리스트 초기화
         goalList = new ArrayList<>();
 
+        //상단 월간/주간 버튼 로직
+        // 오늘 달성률 영역 클릭 시 통계 화면으로 이동
+        LinearLayout todayAchievementContainer = findViewById(R.id.todayAchievementContainer);
+        todayAchievementContainer.setOnClickListener(v -> openStatisticsActivity());
+
+        // 월 달성률 영역 클릭 시 통계 화면으로 이동
+        LinearLayout monthAchievementContainer = findViewById(R.id.monthAchievementContainer);
+        monthAchievementContainer.setOnClickListener(v -> openStatisticsActivity());
+
+
         // View 초기화
         todayAchievement = findViewById(R.id.todayAchievement);
         monthAchievement = findViewById(R.id.monthAchievement);
@@ -78,6 +90,11 @@ public class MainActivity extends MenuActivity {
         // 초기 날짜 설정 및 목표 로드
         selectedDate = getCurrentDate();
         loadGoalsForDate(selectedDate);
+    }
+
+    private void openStatisticsActivity() {
+        Intent intent = new Intent(MainActivity.this, GoalMonthlyActivity.class);
+        startActivity(intent);
     }
 
     private String getCurrentDate() {

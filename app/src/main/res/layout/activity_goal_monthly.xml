@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- res/layout/activity_goal_monthly.xml -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
     <!-- 상단 레이아웃 (제목 및 아이콘) -->
@@ -31,31 +31,34 @@
             android:textStyle="bold"/>
     </LinearLayout>
 
-    <!-- 중간 컨텐츠 레이아웃 -->
+
+
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:orientation="vertical"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginStart="10dp"
-        android:layout_gravity="center"
         android:padding="16dp">
-    <!-- 월간 목표 달성 요약 텍스트 -->
+
         <TextView
-            android:id="@+id/tvMonthlySummary"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Monthly Goal Summary"
+            android:text="오늘/월간 달성률"
             android:textSize="20sp"
-            android:textStyle="bold"
-            android:layout_marginBottom="16dp" />
+            android:textStyle="bold"/>
 
-        <!-- 달성 통계를 시각화할 차트 뷰 (예: BarChart) -->
-        <com.github.mikephil.charting.charts.BarChart
-            android:id="@+id/barChartGoals"
+        <com.github.mikephil.charting.charts.PieChart
+            android:id="@+id/pieChart"
             android:layout_width="match_parent"
-            android:layout_height="300dp" />
+            android:layout_height="300dp"
+            android:layout_marginTop="20dp" />
+
+        <ProgressBar
+            android:id="@+id/healthProgress"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:max="100"
+            android:progress="60" />
 
         <!-- 추가적인 통계 요약 텍스트 -->
         <TextView
@@ -66,4 +69,14 @@
             android:textSize="16sp"
             android:layout_marginTop="16dp" />
     </LinearLayout>
+
+    <!-- Bottom Navigation View 추가 -->
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottomNavigationView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        app:menu="@menu/main_menu"
+        app:labelVisibilityMode="unlabeled" />
+
 </LinearLayout>
