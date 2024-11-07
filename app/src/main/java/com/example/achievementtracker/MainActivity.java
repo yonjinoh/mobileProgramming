@@ -48,13 +48,20 @@ public class MainActivity extends MenuActivity {
         goalList = new ArrayList<>();
 
         //상단 월간/주간 버튼 로직
-        // 오늘 달성률 영역 클릭 시 통계 화면으로 이동
+        // 오늘 달성률 영역 클릭 시 DailyAchievementActivity로 이동
         LinearLayout todayAchievementContainer = findViewById(R.id.todayAchievementContainer);
-        todayAchievementContainer.setOnClickListener(v -> openStatisticsActivity());
+        todayAchievementContainer.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, GoalDailyActivity.class);
+            startActivity(intent);
+        });
 
-        // 월 달성률 영역 클릭 시 통계 화면으로 이동
+        // 월 달성률 영역 클릭 시 MonthlyAchievementActivity로 이동
         LinearLayout monthAchievementContainer = findViewById(R.id.monthAchievementContainer);
-        monthAchievementContainer.setOnClickListener(v -> openStatisticsActivity());
+        monthAchievementContainer.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, GoalMonthlyActivity.class);
+            startActivity(intent);
+        });
+
 
 
         // View 초기화

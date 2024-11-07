@@ -6,7 +6,6 @@ import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.ToggleButton;
-import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -20,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class GoalMonthlyActivity extends MenuActivity {
+public class GoalDailyActivity extends MenuActivity {
 
     private PieChart pieChart;
     private ProgressBar healthProgress, exerciseProgress, hobbyProgress;
@@ -30,7 +29,7 @@ public class GoalMonthlyActivity extends MenuActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_goal_monthly);
+        setContentView(R.layout.activity_goal_daily);  // 새로 생성된 daily 레이아웃 파일
 
         // Initialize views
         pieChart = findViewById(R.id.pieChart);
@@ -41,25 +40,22 @@ public class GoalMonthlyActivity extends MenuActivity {
         exerciseProgressText = findViewById(R.id.exerciseProgressText);
         hobbyProgressText = findViewById(R.id.hobbyProgressText);
 
+        // Initialize toggle buttons
         toggleStatus = findViewById(R.id.toggleStatus);
         toggleTimePeriod = findViewById(R.id.toggleTimePeriod);
 
-
-        // Set default statistics to show achievement rate for the current month
-        updateStatistics(true, "monthly");
+        // Set default statistics to show achievement rate for today
+        updateStatistics(true);
 
         // Listener for status toggle (achievement/failure)
         toggleStatus.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            boolean showAchievement = isChecked; // true if "달성" is selected
-            String period = toggleTimePeriod.isChecked() ? "daily" : "monthly";
-            updateStatistics(showAchievement, period);
+            updateStatistics(isChecked);  // Update based on achievement or failure
         });
 
         // Toggle 버튼의 상태에 따른 페이지 전환
         toggleTimePeriod.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if (isChecked) {
-                // "오늘"로 설정된 경우 오늘 달성률 페이지로 이동
-                Intent intent = new Intent(GoalMonthlyActivity.this, GoalDailyActivity.class);
+            if (!isChecked) {  // "이달"로 설정된 경우 월간 달성률 페이지로 이동
+                Intent intent = new Intent(GoalDailyActivity.this, GoalMonthlyActivity.class);
                 startActivity(intent);
             }
         });
@@ -72,29 +68,17 @@ public class GoalMonthlyActivity extends MenuActivity {
         setupBottomNavigationView();
     }
 
-    // Updates statistics based on achievement/failure and time period
-    private void updateStatistics(boolean showAchievement, String period) {
-
-        Log.d("GoalDataCheck", "Goal List Size: " + Goal.goalList.size());
-        for (Goal goal : Goal.goalList) {
-            Log.d("GoalDataCheck", "Title: " + goal.getTitle() + ", Category: " + goal.getCategory() + ", Completed: " + goal.isCompleted());
-        }
-
+    // Updates statistics based on achievement/failure for today
+    private void updateStatistics(boolean showAchievement) {
         Map<String, Integer> categoryRate;
 
         if (showAchievement) {
-            if (period.equals("monthly")) {
-                categoryRate = StatisticsHelper.calculateCategoryAchievement(Goal.goalList);
-            } else {
-                categoryRate = StatisticsHelper.calculateDailyAchievement(Goal.goalList);
-            }
+            // Show achievement rate for today
+            categoryRate = StatisticsHelper.calculateDailyAchievement(Goal.goalList);
             toggleStatus.setText("달성률 보기");
         } else {
-            if (period.equals("monthly")) {
-                categoryRate = StatisticsHelper.calculateCategoryFailure(Goal.goalList);
-            } else {
-                categoryRate = StatisticsHelper.calculateDailyFailure(Goal.goalList);
-            }
+            // Show failure rate for today
+            categoryRate = StatisticsHelper.calculateDailyFailure(Goal.goalList);
             toggleStatus.setText("미달성률 보기");
         }
 
