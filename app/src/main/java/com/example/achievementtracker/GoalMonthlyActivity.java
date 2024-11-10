@@ -88,14 +88,14 @@ public class GoalMonthlyActivity extends MenuActivity {
             } else {
                 categoryRate = StatisticsHelper.calculateDailyAchievement(Goal.goalList);
             }
-            toggleStatus.setText("달성률 보기");
+            toggleStatus.setText("달성");
         } else {
             if (period.equals("monthly")) {
                 categoryRate = StatisticsHelper.calculateCategoryFailure(Goal.goalList);
             } else {
                 categoryRate = StatisticsHelper.calculateDailyFailure(Goal.goalList);
             }
-            toggleStatus.setText("미달성률 보기");
+            toggleStatus.setText("미달성률");
         }
 
         setupPieChart(categoryRate);

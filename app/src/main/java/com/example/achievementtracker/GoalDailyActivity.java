@@ -75,11 +75,11 @@ public class GoalDailyActivity extends MenuActivity {
         if (showAchievement) {
             // Show achievement rate for today
             categoryRate = StatisticsHelper.calculateDailyAchievement(Goal.goalList);
-            toggleStatus.setText("달성률 보기");
+            toggleStatus.setText("달성률");
         } else {
             // Show failure rate for today
             categoryRate = StatisticsHelper.calculateDailyFailure(Goal.goalList);
-            toggleStatus.setText("미달성률 보기");
+            toggleStatus.setText("미달성률");
         }
 
         setupPieChart(categoryRate);
