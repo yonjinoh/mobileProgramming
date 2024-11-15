@@ -75,7 +75,7 @@ public class GoalAlertActivity extends MenuActivity {
         alarmStatusTextView.setText(alarmTimeText);
 
         // 알림
-        Toast.makeText(this, "Daily Goal Alarm Set for " + hour + ":" + minute, Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "알람이 설정되었습니다. " + hour + ":" + minute, Toast.LENGTH_SHORT).show();
     }
 
     private void saveAlarmTime(int hour, int minute) {

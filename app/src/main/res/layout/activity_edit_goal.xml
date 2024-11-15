@@ -8,7 +8,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#32009688"
+        android:background="#5E35B1"
         android:orientation="horizontal"
         android:padding="16dp"
         android:layout_gravity="top">
@@ -18,12 +18,14 @@
             android:layout_width="52dp"
             android:layout_height="match_parent"
             android:layout_gravity="center"
-            android:src="@drawable/ic_back" />
+            android:src="@drawable/ic_back"
+            android:background="?attr/selectableItemBackgroundBorderless"/>
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="목표 수정"
+            android:textColor="@color/white"
             android:layout_gravity="center"
             android:layout_marginStart="10dp"
             android:textSize="20sp"
@@ -63,7 +65,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="200dp"
-            android:backgroundTint="#009688"
+            android:backgroundTint="#5E35B1"
             android:text="수정"
             android:textColor="@android:color/white"
             android:textSize="18sp" />
