@@ -6,6 +6,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -26,13 +27,17 @@ public class GoalDetailActivity extends MenuActivity {
         // View 초기화
         tvGoalTitle = findViewById(R.id.tvGoalTitle);
         spinnerCategory = findViewById(R.id.spinnerCategory);
-        buttonAddGoal = findViewById(R.id.buttonDeleteGoal);
+        buttonAddGoal = findViewById(R.id.buttonAddGoal);
 
         //네비게이션 바
         setupBottomNavigationView();
 
         // Spinner 설정
         setupCategorySpinner();
+
+        //뒤로가기
+        ImageButton backButton = findViewById(R.id.backButton);
+        backButton.setOnClickListener(v -> onBackPressed());
 
         // 등록 버튼 클릭 이벤트 설정
         buttonAddGoal.setOnClickListener(new View.OnClickListener() {

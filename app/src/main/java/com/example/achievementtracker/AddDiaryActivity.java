@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -27,6 +28,10 @@ public class AddDiaryActivity extends MenuActivity {
 
         // 네비게이션 바 설정
         setupBottomNavigationView();
+
+        // 뒤로가기
+        ImageButton backButton = findViewById(R.id.backButton);
+        backButton.setOnClickListener(v -> onBackPressed());
 
         selectedDate = getIntent().getStringExtra("selectedDate");
 
