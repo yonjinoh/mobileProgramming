@@ -61,6 +61,7 @@ public class MainActivity extends MenuActivity {
         }, new GoalAdapter.OnGoalCheckedChangeListener() {
             @Override
             public void onGoalCheckedChanged() {
+                saveGoalsForDate(selectedDate, goalList);
                 updateTodayAchievement();  // 일간 달성률 업데이트
                 updateMonthlyAchievement(); // 월간 달성률 업데이트
             }
