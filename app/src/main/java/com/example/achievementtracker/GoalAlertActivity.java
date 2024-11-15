@@ -1,5 +1,6 @@
 package com.example.achievementtracker;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -16,10 +17,12 @@ import java.util.Calendar;
 
 
 public class GoalAlertActivity extends MenuActivity {
-
     private TimePicker timePicker;
     private Button buttonSetAlarm;
     private TextView alarmStatusTextView;
+    private static final String PREFS_NAME = "goal_alert_prefs";
+    private static final String PREF_ALARM_HOUR = "alarm_hour";
+    private static final String PREF_ALARM_MINUTE = "alarm_minute";
 
 
     @Override
@@ -30,6 +33,8 @@ public class GoalAlertActivity extends MenuActivity {
         timePicker = findViewById(R.id.timePicker);
         buttonSetAlarm = findViewById(R.id.buttonSetAlarm);
         alarmStatusTextView = findViewById(R.id.alarmStatusTextView);
+
+        loadAlarmTime();
 
         buttonSetAlarm.setOnClickListener(v -> setDailyGoalAlarm());
 
@@ -62,11 +67,39 @@ public class GoalAlertActivity extends MenuActivity {
         alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
                 AlarmManager.INTERVAL_DAY, pendingIntent);
 
+        //알림 시간 저장
+        saveAlarmTime(hour, minute);
+
         // 알림 설정 시간 표시
         String alarmTimeText = String.format("알람이 설정되었습니다: %02d:%02d", hour, minute);
         alarmStatusTextView.setText(alarmTimeText);
 
         // 알림
         Toast.makeText(this, "Daily Goal Alarm Set for " + hour + ":" + minute, Toast.LENGTH_SHORT).show();
+    }
+
+    private void saveAlarmTime(int hour, int minute) {
+        SharedPreferences prefs = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putInt(PREF_ALARM_HOUR, hour);
+        editor.putInt(PREF_ALARM_MINUTE, minute);
+        editor.apply();
+    }
+    private void loadAlarmTime() {
+        SharedPreferences prefs = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        int hour = prefs.getInt(PREF_ALARM_HOUR, -1);
+        int minute = prefs.getInt(PREF_ALARM_MINUTE, -1);
+
+        if (hour != -1 && minute != -1) {
+            // 저장된 시간이 있을 경우, TimePicker와 TextView 업데이트
+            timePicker.setHour(hour);
+            timePicker.setMinute(minute);
+
+            String alarmTimeText = String.format("알람이 설정되었습니다: %02d:%02d", hour, minute);
+            alarmStatusTextView.setText(alarmTimeText);
+        } else {
+            // 저장된 시간이 없을 경우 기본 텍스트 설정
+            alarmStatusTextView.setText("알람이 설정되지 않았습니다");
+        }
     }
 }

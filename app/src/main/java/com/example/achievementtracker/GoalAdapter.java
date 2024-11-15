@@ -46,7 +46,10 @@ public class GoalAdapter extends RecyclerView.Adapter<GoalAdapter.GoalViewHolder
             if (onGoalCheckedChangeListener != null) {
                 onGoalCheckedChangeListener.onGoalCheckedChanged();
             }
+            // 체크 상태 변경 시 목표 리스트를 파일에 저장
+            Goal.saveGoalsToFile(holder.itemView.getContext());
         });
+
         // 길게 클릭하면 수정/삭제 옵션 호출
         holder.itemView.setOnLongClickListener(v -> {
             if (onItemLongClickListener != null) {
