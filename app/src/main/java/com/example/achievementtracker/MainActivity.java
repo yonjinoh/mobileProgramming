@@ -58,7 +58,14 @@ public class MainActivity extends MenuActivity {
             public void onLongClick(Goal goal, int position) {
                 showEditDeleteDialog(goal, position);
             }
+        }, new GoalAdapter.OnGoalCheckedChangeListener() {
+            @Override
+            public void onGoalCheckedChanged() {
+                updateTodayAchievement();  // 일간 달성률 업데이트
+                updateMonthlyAchievement(); // 월간 달성률 업데이트
+            }
         });
+
         recyclerViewGoals.setAdapter(goalAdapter);
 
         FloatingActionButton fabAddGoal = findViewById(R.id.AddGoal);
@@ -76,6 +83,47 @@ public class MainActivity extends MenuActivity {
         selectedDate = getCurrentDate();
         loadGoalsForDate(selectedDate);
     }
+
+    private void updateTodayAchievement() {
+        int totalGoals = goalList.size();
+        int completedGoals = 0;
+
+        for (Goal goal : goalList) {
+            if (goal.isCompleted()) { // Goal이 완료되었는지 확인
+                completedGoals++;
+            }
+        }
+
+        int achievementRate = (totalGoals > 0) ? (completedGoals * 100 / totalGoals) : 0;
+        todayAchievement.setText(achievementRate + "%");
+    }
+
+    private void updateMonthlyAchievement() {
+        SharedPreferences prefs = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        int totalGoals = 0;
+        int completedGoals = 0;
+
+        for (String dateKey : prefs.getAll().keySet()) {
+            if (dateKey.startsWith(DATE_GOALS_PREFIX)) {
+                String json = prefs.getString(dateKey, null);
+                Type type = new TypeToken<ArrayList<Goal>>() {}.getType();
+                List<Goal> goals = new Gson().fromJson(json, type);
+
+                if (goals != null) {
+                    totalGoals += goals.size();
+                    for (Goal goal : goals) {
+                        if (goal.isCompleted()) {
+                            completedGoals++;
+                        }
+                    }
+                }
+            }
+        }
+
+        int achievementRate = (totalGoals > 0) ? (completedGoals * 100 / totalGoals) : 0;
+        monthAchievement.setText(achievementRate + "%");
+    }
+
 
     private void showEditDeleteDialog(Goal goal, int position) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -128,6 +176,9 @@ public class MainActivity extends MenuActivity {
             goalList.addAll(goals);
         }
         goalAdapter.notifyDataSetChanged();
+
+        // 오늘 달성률 업데이트
+        updateTodayAchievement();
         return goalList;
     }
 
@@ -135,7 +186,11 @@ public class MainActivity extends MenuActivity {
     protected void onResume() {
         super.onResume();
         goalAdapter.notifyDataSetChanged();
+
+        // 월간 달성률 업데이트
+        updateMonthlyAchievement();
     }
+
 
 
     @Override

@@ -11,14 +11,20 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 public class GoalAdapter extends RecyclerView.Adapter<GoalAdapter.GoalViewHolder> {
-
+    public interface OnGoalCheckedChangeListener {
+        void onGoalCheckedChanged();
+    }
     private List<Goal> goalList;
     private OnItemLongClickListener onItemLongClickListener;
+    private OnGoalCheckedChangeListener onGoalCheckedChangeListener;
+
 
     // 생성자
-    public GoalAdapter(List<Goal> goalList, OnItemLongClickListener listener) {
+    public GoalAdapter(List<Goal> goalList, OnItemLongClickListener listener, OnGoalCheckedChangeListener checkListener) {
         this.goalList = goalList;
         this.onItemLongClickListener = listener;
+        this.onGoalCheckedChangeListener = checkListener;
+
     }
 
     @NonNull
@@ -35,8 +41,12 @@ public class GoalAdapter extends RecyclerView.Adapter<GoalAdapter.GoalViewHolder
         holder.cbGoalCompleted.setChecked(goal.isCompleted());
 
         // 체크박스 상태가 변경될 때 완료 상태를 업데이트
-        holder.cbGoalCompleted.setOnCheckedChangeListener((buttonView, isChecked) -> goal.setCompleted(isChecked));
-
+        holder.cbGoalCompleted.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            goal.setCompleted(isChecked);
+            if (onGoalCheckedChangeListener != null) {
+                onGoalCheckedChangeListener.onGoalCheckedChanged();
+            }
+        });
         // 길게 클릭하면 수정/삭제 옵션 호출
         holder.itemView.setOnLongClickListener(v -> {
             if (onItemLongClickListener != null) {
