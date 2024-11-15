@@ -23,7 +23,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="목표 추가"
+            android:text="목표 수정"
             android:layout_gravity="center"
             android:layout_marginStart="10dp"
             android:textSize="20sp"
@@ -43,7 +43,7 @@
         android:orientation="vertical">
 
         <EditText
-            android:id="@+id/tvGoalTitle"
+            android:id="@+id/editTextGoalTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="목표를 작성해주세요"
@@ -59,12 +59,12 @@
             android:layout_marginTop="10dp" />
 
         <Button
-            android:id="@+id/buttonAddGoal"
+            android:id="@+id/buttonEditGoal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="200dp"
             android:backgroundTint="#009688"
-            android:text="등록"
+            android:text="수정"
             android:textColor="@android:color/white"
             android:textSize="18sp" />
     </LinearLayout>

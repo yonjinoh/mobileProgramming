@@ -29,7 +29,7 @@ public class AddGoalActivity extends MenuActivity {
         // View 초기화
         tvGoalTitle = findViewById(R.id.tvGoalTitle);
         spinnerCategory = findViewById(R.id.spinnerCategory);
-        buttonAddGoal = findViewById(R.id.buttonDeleteGoal);
+        buttonAddGoal = findViewById(R.id.buttonAddGoal);
         backButton = findViewById(R.id.backButton);
 
         //네비게이션 바

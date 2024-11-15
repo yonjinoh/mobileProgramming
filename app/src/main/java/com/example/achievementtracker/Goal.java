@@ -9,11 +9,15 @@ import java.io.Serializable;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class Goal implements Serializable {
+    private static int nextId = 1;
     private String title;
     private String category;
     private boolean isCompleted;
+    private int id;
+
 
     public static List<Goal> goalList = new ArrayList<>();
 
@@ -22,12 +26,14 @@ public class Goal implements Serializable {
         this.title = title;
         this.category = category;
         this.isCompleted = isCompleted;
+        this.id = nextId++;
     }
 
     // Getter 및 Setter 메서드
     public String getTitle() { return title; }
     public String getCategory() { return category; }
     public boolean isCompleted() { return isCompleted; }
+    public int getId() {return id;}
     public void setTitle(String title) { this.title = title; }
     public void setCategory(String category) { this.category = category; }
     public void setCompleted(boolean completed) { isCompleted = completed; }
@@ -54,4 +60,18 @@ public class Goal implements Serializable {
             goalList.addAll(loadedGoals);
         }
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        Goal goal = (Goal) obj;
+        return this.id == goal.id; // 각 Goal 객체에 고유 id가 있다면 이를 비교 기준으로 사용
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id); // 고유 id를 사용하여 hashCode 생성
+    }
+
 }

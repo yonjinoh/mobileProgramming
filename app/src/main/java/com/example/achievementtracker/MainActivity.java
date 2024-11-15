@@ -4,21 +4,20 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.CalendarView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,15 +25,15 @@ import java.util.List;
 public class MainActivity extends MenuActivity {
 
     private static final int REQUEST_CODE_ADD_GOAL = 1;
+    private static final int REQUEST_CODE_EDIT_GOAL = 2;
     private RecyclerView recyclerViewGoals;
     private GoalAdapter goalAdapter;
     private List<Goal> goalList;
     private CalendarView calendarView;
     private TextView todayAchievement, monthAchievement;
     private static final String PREFS_NAME = "goals_prefs";
-    private static final String DATE_GOALS_PREFIX = "goals_";  // 날짜별 목표 구분
-
-    private String selectedDate;  // 현재 선택된 날짜를 저장하는 변수
+    private static final String DATE_GOALS_PREFIX = "goals_";
+    private String selectedDate;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -47,65 +46,59 @@ public class MainActivity extends MenuActivity {
         // 목표 리스트 초기화
         goalList = new ArrayList<>();
 
-        //상단 월간/주간 버튼 로직
-        // 오늘 달성률 영역 클릭 시 DailyAchievementActivity로 이동
-        LinearLayout todayAchievementContainer = findViewById(R.id.todayAchievementContainer);
-        todayAchievementContainer.setOnClickListener(v -> {
-            Intent intent = new Intent(MainActivity.this, GoalDailyActivity.class);
-            startActivity(intent);
-        });
-
-        // 월 달성률 영역 클릭 시 MonthlyAchievementActivity로 이동
-        LinearLayout monthAchievementContainer = findViewById(R.id.monthAchievementContainer);
-        monthAchievementContainer.setOnClickListener(v -> {
-            Intent intent = new Intent(MainActivity.this, GoalMonthlyActivity.class);
-            startActivity(intent);
-        });
-
-
-
-        // View 초기화
         todayAchievement = findViewById(R.id.todayAchievement);
         monthAchievement = findViewById(R.id.monthAchievement);
         calendarView = findViewById(R.id.calendarView);
         recyclerViewGoals = findViewById(R.id.goalRecyclerView);
 
-        // RecyclerView 설정
+        // RecyclerView 설정 및 어댑터 할당
         recyclerViewGoals.setLayoutManager(new LinearLayoutManager(this));
-        goalAdapter = new GoalAdapter(goalList);
+        goalAdapter = new GoalAdapter(goalList, new GoalAdapter.OnItemLongClickListener() {
+            @Override
+            public void onLongClick(Goal goal, int position) {
+                showEditDeleteDialog(goal, position);
+            }
+        });
         recyclerViewGoals.setAdapter(goalAdapter);
 
-        // FloatingActionButton 클릭 이벤트 (목표 추가)
         FloatingActionButton fabAddGoal = findViewById(R.id.AddGoal);
         fabAddGoal.setOnClickListener(v -> {
             Intent intent = new Intent(MainActivity.this, AddGoalActivity.class);
             startActivityForResult(intent, REQUEST_CODE_ADD_GOAL);
         });
 
-        // CalendarView 날짜 변경 리스너 설정
         calendarView.setOnDateChangeListener((view, year, month, dayOfMonth) -> {
             selectedDate = year + "/" + (month + 1) + "/" + dayOfMonth;
             Toast.makeText(MainActivity.this, "Selected date: " + selectedDate, Toast.LENGTH_SHORT).show();
-
-            // 선택한 날짜에 따라 목표 리스트 로드
             loadGoalsForDate(selectedDate);
         });
 
-        // 초기 달성률 설정
-        initializeAchievements();
-
-        // 초기 날짜 설정 및 목표 로드
         selectedDate = getCurrentDate();
         loadGoalsForDate(selectedDate);
     }
 
-    private void openStatisticsActivity() {
-        Intent intent = new Intent(MainActivity.this, GoalMonthlyActivity.class);
-        startActivity(intent);
+    private void showEditDeleteDialog(Goal goal, int position) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("어떤 작업을 진행하시겠습니까?")
+                .setItems(new String[]{"수정", "삭제"}, (dialog, which) -> {
+                    if (which == 0) {
+                        // Edit: EditGoalActivity로 이동
+                        Intent intent = new Intent(MainActivity.this, EditGoalActivity.class);
+                        intent.putExtra("goal", goal);
+                        startActivityForResult(intent, REQUEST_CODE_EDIT_GOAL);
+                    } else {
+                        // Delete: 리스트에서 목표 삭제
+                        goalList.remove(position);
+                        goalAdapter.notifyItemRemoved(position);
+                        saveGoalsForDate(selectedDate, goalList);
+                        Toast.makeText(this, "Goal deleted", Toast.LENGTH_SHORT).show();
+                    }
+                });
+        builder.show();
     }
 
+
     private String getCurrentDate() {
-        // 현재 날짜를 "yyyy/MM/dd" 형식으로 반환
         long date = calendarView.getDate();
         java.util.Calendar calendar = java.util.Calendar.getInstance();
         calendar.setTimeInMillis(date);
@@ -115,23 +108,15 @@ public class MainActivity extends MenuActivity {
         return year + "/" + month + "/" + day;
     }
 
-    // 샘플 데이터로 오늘/월간 달성률 설정 (DB에서 불러오거나 계산 가능)
-    private void initializeAchievements() {
-        todayAchievement.setText("60%");
-        monthAchievement.setText("70%");
-    }
-
-    // 목표 리스트를 SharedPreferences에 날짜별로 저장
     private void saveGoalsForDate(String date, List<Goal> goals) {
         SharedPreferences prefs = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
         Gson gson = new Gson();
-        String json = gson.toJson(goals);  // 리스트를 JSON 문자열로 변환
+        String json = gson.toJson(goals);
         editor.putString(DATE_GOALS_PREFIX + date, json);
-        editor.apply();  // 비동기 방식으로 저장
+        editor.apply();
     }
 
-    // 날짜별 목표 리스트를 SharedPreferences에서 불러오기
     private List<Goal> loadGoalsForDate(String date) {
         SharedPreferences prefs = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
         Gson gson = new Gson();
@@ -146,18 +131,52 @@ public class MainActivity extends MenuActivity {
         return goalList;
     }
 
-    // AddGoalActivity에서 돌아올 때 호출
+    @Override
+    protected void onResume() {
+        super.onResume();
+        goalAdapter.notifyDataSetChanged();
+    }
+
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
+        if (data == null) {
+            Log.d("MainActivity", "onActivityResult: data is null");
+            return;
+        }
+
         if (requestCode == REQUEST_CODE_ADD_GOAL && resultCode == RESULT_OK) {
             Goal newGoal = (Goal) data.getSerializableExtra("newGoal");
             if (newGoal != null) {
-                goalList.add(newGoal);
-                goalAdapter.notifyDataSetChanged();
-                saveGoalsForDate(selectedDate, goalList);  // 새로운 목표를 현재 선택된 날짜에 저장
+                Log.d("MainActivity", "onActivityResult: newGoal 전달됨: " + newGoal.getTitle());
+                goalList.add(newGoal); // 새로운 목표를 리스트에 추가
+                goalAdapter.notifyDataSetChanged(); // RecyclerView 갱신
+                saveGoalsForDate(selectedDate, goalList); // 업데이트된 목표 리스트 저장
+            } else {
+                Log.d("MainActivity", "onActivityResult: newGoal is null");
+            }
+        } else if (requestCode == REQUEST_CODE_EDIT_GOAL && resultCode == RESULT_OK) {
+            Goal updatedGoal = (Goal) data.getSerializableExtra("updatedGoal");
+            if (updatedGoal != null) {
+                Log.d("MainActivity", "onActivityResult: updatedGoal 전달됨: " + updatedGoal.getTitle());
+                int position = goalList.indexOf(updatedGoal);
+                if (position != -1) {
+                    goalList.set(position, updatedGoal);
+                    goalAdapter.notifyDataSetChanged();
+                    saveGoalsForDate(selectedDate, goalList);
+                }
+            } else {
+                Log.d("MainActivity", "onActivityResult: updatedGoal is null");
             }
         }
     }
+
+
+
+
+
+
+
 }

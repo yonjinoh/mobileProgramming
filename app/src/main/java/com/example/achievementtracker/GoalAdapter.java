@@ -1,22 +1,24 @@
 package com.example.achievementtracker;
 
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 public class GoalAdapter extends RecyclerView.Adapter<GoalAdapter.GoalViewHolder> {
 
     private List<Goal> goalList;
+    private OnItemLongClickListener onItemLongClickListener;
 
     // 생성자
-    public GoalAdapter(List<Goal> goalList) {
+    public GoalAdapter(List<Goal> goalList, OnItemLongClickListener listener) {
         this.goalList = goalList;
+        this.onItemLongClickListener = listener;
     }
 
     @NonNull
@@ -34,11 +36,24 @@ public class GoalAdapter extends RecyclerView.Adapter<GoalAdapter.GoalViewHolder
 
         // 체크박스 상태가 변경될 때 완료 상태를 업데이트
         holder.cbGoalCompleted.setOnCheckedChangeListener((buttonView, isChecked) -> goal.setCompleted(isChecked));
+
+        // 길게 클릭하면 수정/삭제 옵션 호출
+        holder.itemView.setOnLongClickListener(v -> {
+            if (onItemLongClickListener != null) {
+                // 수정/삭제 옵션 표시
+                onItemLongClickListener.onLongClick(goal, position);
+            }
+            return true;
+        });
     }
 
     @Override
     public int getItemCount() {
         return goalList.size();
+    }
+
+    public interface OnItemLongClickListener {
+        void onLongClick(Goal goal, int position);
     }
 
     // ViewHolder 클래스
