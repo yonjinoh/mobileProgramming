@@ -51,25 +51,25 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="이 달의 목표 달성률"
+                android:text="이 달의 달성률"
                 android:textSize="20sp"
                 android:textStyle="bold"
+                android:layout_marginStart="20dp"
                 android:layout_marginEnd="8dp"/>
 
-            <ToggleButton
-                android:id="@+id/toggleTimePeriod"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textOff="이번 달"
-                android:textOn="오늘" />
+
 
             <ToggleButton
                 android:id="@+id/toggleStatus"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="3dp"
+                android:layout_width="60dp"
+                android:layout_height="30dp"
+                android:layout_marginTop="3dp"
+                android:background="@drawable/toggle_background"
+                android:thumb="@drawable/toggle_thumb"
                 android:textOff="미달성"
-                android:textOn="달성" />
+                android:textOn="달성"
+                android:layout_marginStart="3dp" />
+
 
         </LinearLayout>
 
@@ -185,6 +185,103 @@
                     android:layout_marginStart="8dp"
                     android:text="0%" />
             </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:gravity="center_vertical"
+                android:layout_marginTop="8dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="독서"
+                    android:textSize="16sp" />
+
+                <ProgressBar
+                    android:id="@+id/readingProgress"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3"
+                    android:max="100" />
+
+                <TextView
+                    android:id="@+id/readingProgressText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:text="0%" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:gravity="center_vertical"
+                android:layout_marginTop="8dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="학습"
+                    android:textSize="16sp" />
+
+                <ProgressBar
+                    android:id="@+id/studyProgress"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3"
+                    android:max="100" />
+
+                <TextView
+                    android:id="@+id/studyProgressText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:text="0%" />
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:gravity="center_vertical"
+                android:layout_marginTop="8dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="기타"
+                    android:textSize="16sp" />
+
+                <ProgressBar
+                    android:id="@+id/etcProgress"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3"
+                    android:max="100" />
+
+                <TextView
+                    android:id="@+id/etcProgressText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:text="0%" />
+            </LinearLayout>
+
         </LinearLayout>
     </LinearLayout>
 

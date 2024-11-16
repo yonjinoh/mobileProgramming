@@ -44,6 +44,7 @@ public class DiaryActivity extends MenuActivity {
 
         // 네비게이션 바 설정
         setupBottomNavigationView();
+        setActiveMenuItem(R.id.navigation_diary);
 
         diaryEntries = loadDiaries();
 

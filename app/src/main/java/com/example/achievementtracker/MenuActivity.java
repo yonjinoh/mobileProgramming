@@ -2,6 +2,8 @@ package com.example.achievementtracker;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
+
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -36,5 +38,15 @@ public class MenuActivity extends AppCompatActivity {
             }
             return false;
         });
+    }
+
+    // 현재 액티비티에 따라 선택된 메뉴를 설정
+    protected void setActiveMenuItem(int itemId) {
+        if (bottomNavigationView != null) {
+            MenuItem item = bottomNavigationView.getMenu().findItem(itemId);
+            if (item != null) {
+                item.setChecked(true);
+            }
+        }
     }
 }

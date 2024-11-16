@@ -42,6 +42,7 @@ public class MainActivity extends MenuActivity {
 
         // 네비게이션 바 설정
         setupBottomNavigationView();
+        setActiveMenuItem(R.id.navigation_home);
 
         // 목표 리스트 초기화
         goalList = new ArrayList<>();
@@ -183,16 +184,6 @@ public class MainActivity extends MenuActivity {
         return goalList;
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        goalAdapter.notifyDataSetChanged();
-
-        // 월간 달성률 업데이트
-        updateMonthlyAchievement();
-    }
-
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -228,6 +219,31 @@ public class MainActivity extends MenuActivity {
             }
         }
     }
+
+    private void saveCurrentGoals() {
+        Goal.saveGoalsToFile(this); // 데이터 저장
+        Log.d("MainActivity", "현재 목표 저장 완료.");
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Goal.loadGoalsFromFile(this); // 데이터 로드
+        loadGoalsForDate(selectedDate); // 선택된 날짜의 목표 로드
+        updateMonthlyAchievement(); // 월간 달성률 업데이트
+        updateTodayAchievement();  // 오늘 달성률 업데이트
+        Log.d("MainActivity", "onResume: 데이터 로드 및 업데이트 완료");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Goal.saveGoalsToFile(this); // 앱이 백그라운드로 갈 때 데이터 저장
+        Log.d("MainActivity", "onPause: 데이터 저장 완료");
+    }
+
+
 
 
 

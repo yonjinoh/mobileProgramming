@@ -2,6 +2,8 @@ package com.example.achievementtracker;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
+
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -52,14 +54,24 @@ public class Goal implements Serializable {
     public static void loadGoalsFromFile(Context context) {
         SharedPreferences prefs = context.getSharedPreferences("goals_prefs", Context.MODE_PRIVATE);
         Gson gson = new Gson();
-        String json = prefs.getString("goalList", null);
-        Type type = new TypeToken<ArrayList<Goal>>() {}.getType();
-        List<Goal> loadedGoals = gson.fromJson(json, type);
-        if (loadedGoals != null) {
-            goalList.clear();
-            goalList.addAll(loadedGoals);
+        goalList.clear();
+
+        for (String key : prefs.getAll().keySet()) {
+            Log.d("Goal", "SharedPreferences Key: " + key); // 저장된 키 확인
+            if (key.startsWith("goals_")) {
+                String json = prefs.getString(key, null);
+                Type type = new TypeToken<ArrayList<Goal>>() {}.getType();
+                List<Goal> loadedGoals = gson.fromJson(json, type);
+                if (loadedGoals != null) {
+                    goalList.addAll(loadedGoals);
+                    Log.d("Goal", "로드된 목표 개수: " + loadedGoals.size());
+                }
+            }
         }
+
+        Log.d("Goal", "최종 로드된 목표 총 개수: " + goalList.size());
     }
+
 
     @Override
     public boolean equals(Object obj) {

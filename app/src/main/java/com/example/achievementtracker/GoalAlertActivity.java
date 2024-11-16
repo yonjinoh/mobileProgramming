@@ -40,6 +40,7 @@ public class GoalAlertActivity extends MenuActivity {
 
         //네비게이션 바
         setupBottomNavigationView();
+        setActiveMenuItem(R.id.navigation_share);
 
         //뒤로 가기
         ImageButton backButton = findViewById(R.id.backButton);
