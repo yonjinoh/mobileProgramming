@@ -51,23 +51,24 @@
 
 ![README-001](https://github.com/CSID-DGU/2024-1-OSSProj-OhYeSu-05/assets/143872214/b5b5acd9-d33c-422c-a8a4-c71c4d89f875)
 
-- 프로필 생성 기능  
-    ![프로필생성](https://github.com/CSID-DGU/2024-1-OSSProj-OhYeSu-05/assets/144078388/f457610f-4d1d-4677-8d62-6c246bd97003) 
+- 메인 화면
+    ![메인화면](https://github.com/user-attachments/assets/af780222-0abc-4d42-b92e-0337346782b5)
 
-- 룸메이트에 대한 선호 정보 입력 기능
-    ![룸메선호정보](https://github.com/CSID-DGU/2024-1-OSSProj-OhYeSu-05/assets/144078388/67c7b411-2903-429b-955b-4a093f870fce)  
+- 목표 추가 기능
+    ![목표추가](https://github.com/user-attachments/assets/9cd41709-dda1-4f74-82d8-d31f88516bd4)
 
-- 매칭 알고리즘을 통한 룸메이트 추천 기능
-    ![매칭목록](https://github.com/CSID-DGU/2024-1-OSSProj-OhYeSu-05/assets/144078388/6b491dff-fba8-4a14-b739-8d97e50e834f)  
+- 목표 달성률 통계 화면
+    ![목표달성](https://github.com/user-attachments/assets/fe8e10fd-9b05-4f02-b80c-728f5942c6cb)
 
-- 채팅 기능  
-    ![채팅하기](https://github.com/CSID-DGU/2024-1-OSSProj-OhYeSu-05/assets/144078388/8afd6c1c-f799-476f-8da2-95eb16c94af0)
+- 일기 캘린더 화면
+    ![일기메인](https://github.com/user-attachments/assets/e303b60c-9a06-4e85-bd57-6188fa76f6db)
 
-- 신고 기능  
-    ![신고하기](https://github.com/CSID-DGU/2024-1-OSSProj-OhYeSu-05/assets/144078388/6738ef9a-25a5-4d63-959a-1b0c69db6d12)
+- 일기 추가 기능
+    ![일기추가](https://github.com/user-attachments/assets/486a0cc2-dad7-437a-ba95-cf480730efe9)
+
+- 알림 추가 기능
+    ![알림추가](https://github.com/user-attachments/assets/21718dba-816e-4c79-ad97-c8f9265ba835)  
    
-  
-- 이외의 구현 기능은 최종보고서 부록에 기재 <br>[최종보고서 부록](https://github.com/CSID-DGU/2024-1-OSSProj-OhYeSu-05/blob/main/Doc/3_3_OSSProj_05_OhYeSu_최종보고서부록.md)
 
 
 ### 5. 프로젝트 구조
