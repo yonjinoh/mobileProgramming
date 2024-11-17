@@ -70,9 +70,4 @@
     ![알림추가](https://github.com/user-attachments/assets/21718dba-816e-4c79-ad97-c8f9265ba835)  
    
 
-
-### 5. 프로젝트 구조
-#### 5.1 시스템 구조
-![시스템 구조도](https://github.com/CSID-DGU/2024-1-OSSProj-OhYeSu-05/assets/143872214/bc6d45b7-436e-44be-81b9-0487dd78977d)  
-
-
+2024-2 모바일 프로그래밍 과제
