@@ -1,29 +1,30 @@
 package com.example.achievementtracker;
 
-import android.content.SharedPreferences;
-import android.os.Bundle;
-import android.widget.ImageButton;
-import android.widget.TextView;
-import android.widget.Toast;
-import android.content.BroadcastReceiver;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
-import android.widget.TimePicker;
-import android.widget.Button;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.Build;
+import android.os.Bundle;
+import android.util.Log;
+import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.TextView;
+import android.widget.TimePicker;
+import android.widget.Toast;
+
 import java.util.Calendar;
 
-
-
 public class GoalAlertActivity extends MenuActivity {
+
     private TimePicker timePicker;
     private Button buttonSetAlarm;
     private TextView alarmStatusTextView;
+
     private static final String PREFS_NAME = "goal_alert_prefs";
     private static final String PREF_ALARM_HOUR = "alarm_hour";
     private static final String PREF_ALARM_MINUTE = "alarm_minute";
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,45 +39,64 @@ public class GoalAlertActivity extends MenuActivity {
 
         buttonSetAlarm.setOnClickListener(v -> setDailyGoalAlarm());
 
-        //네비게이션 바
+        // 네비게이션 바
         setupBottomNavigationView();
         setActiveMenuItem(R.id.navigation_share);
 
-        //뒤로 가기
+        // 뒤로 가기 버튼
         ImageButton backButton = findViewById(R.id.backButton);
         backButton.setOnClickListener(v -> onBackPressed());
-
     }
+
     private void setDailyGoalAlarm() {
-        // TimePicker에서 시간과 분 가져오기
         int hour = timePicker.getHour();
         int minute = timePicker.getMinute();
 
-        // 알람 시간을 설정
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.HOUR_OF_DAY, hour);
         calendar.set(Calendar.MINUTE, minute);
         calendar.set(Calendar.SECOND, 0);
 
-        // 알람 설정
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(this, GoalAlarmReceiver.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(
                 this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
 
-        // 매일 설정된 시간에 알람 반복
-        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
-                AlarmManager.INTERVAL_DAY, pendingIntent);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && !canScheduleExactAlarms()) {
+            requestExactAlarmPermission();
+            Toast.makeText(this, "정확한 알람 권한이 필요합니다.", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
-        //알림 시간 저장
+        if (alarmManager != null) {
+            alarmManager.setExactAndAllowWhileIdle(
+                    AlarmManager.RTC_WAKEUP,
+                    calendar.getTimeInMillis(),
+                    pendingIntent
+            );
+            Log.d("GoalAlertActivity", "알람이 설정되었습니다. 시간: " + calendar.getTime());
+        } else {
+            Log.e("GoalAlertActivity", "AlarmManager를 가져올 수 없습니다.");
+        }
+
         saveAlarmTime(hour, minute);
-
-        // 알림 설정 시간 표시
-        String alarmTimeText = String.format("알람이 설정되었습니다: %02d:%02d", hour, minute);
-        alarmStatusTextView.setText(alarmTimeText);
-
-        // 알림
+        alarmStatusTextView.setText(String.format("알람이 설정되었습니다: %02d:%02d", hour, minute));
         Toast.makeText(this, "알람이 설정되었습니다. " + hour + ":" + minute, Toast.LENGTH_SHORT).show();
+    }
+
+    private boolean canScheduleExactAlarms() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+            return alarmManager != null && alarmManager.canScheduleExactAlarms();
+        }
+        return true; // Android 12 미만에서는 항상 true
+    }
+
+    private void requestExactAlarmPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            Intent intent = new Intent(android.provider.Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM);
+            startActivity(intent);
+        }
     }
 
     private void saveAlarmTime(int hour, int minute) {
@@ -86,21 +106,18 @@ public class GoalAlertActivity extends MenuActivity {
         editor.putInt(PREF_ALARM_MINUTE, minute);
         editor.apply();
     }
+
     private void loadAlarmTime() {
         SharedPreferences prefs = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
         int hour = prefs.getInt(PREF_ALARM_HOUR, -1);
         int minute = prefs.getInt(PREF_ALARM_MINUTE, -1);
 
         if (hour != -1 && minute != -1) {
-            // 저장된 시간이 있을 경우, TimePicker와 TextView 업데이트
             timePicker.setHour(hour);
             timePicker.setMinute(minute);
-
-            String alarmTimeText = String.format("알람이 설정되었습니다: %02d:%02d", hour, minute);
-            alarmStatusTextView.setText(alarmTimeText);
+            alarmStatusTextView.setText(String.format("알람이 설정되었습니다: %02d:%02d", hour, minute));
         } else {
-            // 저장된 시간이 없을 경우 기본 텍스트 설정
-            alarmStatusTextView.setText("알람이 설정되지 않았습니다");
+            alarmStatusTextView.setText("알람이 설정되지 않았습니다.");
         }
     }
 }
