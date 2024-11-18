@@ -57,6 +57,9 @@
 - 목표 추가 기능
     ![목표추가](https://github.com/user-attachments/assets/9cd41709-dda1-4f74-82d8-d31f88516bd4)
 
+- 목표 수정 및 삭제
+    ![수정 및 삭제](https://github.com/user-attachments/assets/e21349f1-97ff-4472-87b1-acaa08982842)
+
 - 목표 달성률 통계 화면
     ![목표달성](https://github.com/user-attachments/assets/fe8e10fd-9b05-4f02-b80c-728f5942c6cb)
 
